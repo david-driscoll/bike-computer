@@ -1,0 +1,9 @@
+{
+  "name": "bike-computer",
+  "dependencies": {},
+  "globalDependencies": {
+    "electron": "registry:env/electron#0.37.6+20160416165306",
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "node": "registry:env/node#4.0.0+20160507210304"
+  }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="../vendor/kendo/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="../vendor/kendo/styles/kendo.common.core.min.css">
+    <link rel="stylesheet" href="../vendor/kendo/styles/kendo.metroblack.min.css">
+    <link rel="stylesheet" href="../node_modules/roboto-font/css/fonts.css">
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Hello World!</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    We are using node
+    <script>
+        document.write(process.versions.node)
+    </script>, Chromium
+    <script>
+        document.write(process.versions.chrome)
+    </script>, and Electron
+    <script>
+        document.write(process.versions.electron)
+    </script>.
+
+    <speedo></speedo>
+    <script>
+        var jQuery = require('jquery');
+        var $ = jQuery;
+    </script>
+    <script src="../vendor/kendo/js/kendo.all.min.js"></script>
+    <script>
+        // You can also require other files to run in this process
+        require('./browser.js');
+    </script>
+</body>
+
+</html>
