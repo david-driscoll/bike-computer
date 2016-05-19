@@ -1,6 +1,7 @@
 import {Component, ElementRef} from '@angular/core';
 import {DisposableComponent} from '../../helpers/disposables';
 import {PhotodetectorService} from '../../services/PhotodetectorService';
+import {AccelerationService} from '../../services/AccelerationService';
 
 @Component({
     selector: 'speedo',
@@ -16,9 +17,14 @@ import {PhotodetectorService} from '../../services/PhotodetectorService';
 export class SpeedoControl extends DisposableComponent {
     private _element: HTMLElement;
     private _gauge: kendo.dataviz.ui.RadialGauge;
-    constructor(private photosensor: PhotodetectorService, ref: ElementRef) {
+    constructor(
+        private photosensor: PhotodetectorService,
+        private acceleration: AccelerationService,
+        ref: ElementRef) {
         super();
         this._element = ref.nativeElement;
+
+        this._disposable.add(acceleration.speed.subscribe(speed => this.updateSpeed(speed)));
     }
 
     public ngOnInit() {
@@ -85,6 +91,10 @@ export class SpeedoControl extends DisposableComponent {
 
         this._gauge = element.data('kendoRadialGauge');
         this._disposable.add(() => this._gauge.destroy());
+    }
+
+    public updateSpeed(speed: number) {
+        this._gauge.allValues([speed]);
     }
 }
 

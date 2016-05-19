@@ -1,10 +1,9 @@
 import {Component} from '@angular/core';
-import {loadComponents, loadInjectables} from './helpers';
-import {PhotodetectorService} from '../services/PhotodetectorService';
+import {loadComponents, loadInjectables} from '../helpers/serviceLoading';
 
 @Component({
     selector: 'bike-computer',
-    providers: [PhotodetectorService],
+    providers: loadInjectables(require, __dirname, '../services'),
     directives: loadComponents(require, __dirname, 'controls'),
     template: `
         <speedo></speedo>

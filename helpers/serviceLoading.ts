@@ -1,4 +1,4 @@
-import {ComponentMetadata, InjectMetadata} from '@angular/core';
+import {ComponentMetadata, InjectableMetadata} from '@angular/core';
 import _ from 'lodash';
 import {readdirSync} from 'fs';
 import {join, basename, extname} from 'path';
@@ -38,7 +38,7 @@ export function loadInjectables(req: Function, ...paths: string[]) {
 
         for (let exp of _.values(module)) {
             const annotations = Reflect.getMetadata('annotations', exp);
-            if (_.some(annotations, a => a instanceof InjectMetadata)) {
+            if (_.some(annotations, a => a instanceof InjectableMetadata)) {
                 items.push(exp);
             }
         }
