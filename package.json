@@ -1,0 +1,26 @@
+{
+  "name": "bike-computer",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david-driscoll/bike-computer.git"
+  },
+  "keywords": [
+    "bike",
+    "bicycle"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/david-driscoll/bike-computer/issues"
+  },
+  "homepage": "https://github.com/david-driscoll/bike-computer#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.1.0"
+  }
+}
