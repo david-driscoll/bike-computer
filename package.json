@@ -4,7 +4,8 @@
   "description": "A minimal Electron application",
   "main": "electron/electron.js",
   "scripts": {
-    "start": "electron .",
+    "start": "tsc && electron .",
+    "postinstall": "typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
   },
