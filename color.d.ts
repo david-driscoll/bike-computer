@@ -26,27 +26,12 @@ declare module 'color' {
         k: number;
     }
     export class Color {
-        constructor(color: string);
+        constructor(color?: string);
         constructor(rgb: RbgColor);
         constructor(hsl: HslColor);
         constructor(hsv: HsvColor);
         constructor(hwb: HwbColor);
         constructor(cmyk: CmykColor);
-        static rgb(r: number, g: number, b: number): Color;
-        static rgb(rbg: [number, number, number]): Color;
-        static rgb(rbg: RbgColor): Color;
-        static hsl(h: number, s: number, l: number): Color;
-        static hsl(hsl: [number, number, number]): Color;
-        static hsl(hsl: HslColor): Color;
-        static hsv(h: number, s: number, v: number): Color;
-        static hsv(hsv: [number, number, number]): Color;
-        static hsv(rbg: HsvColor): Color;
-        static hwb(h: number, w: number, b: number): Color;
-        static hwb(hwb: [number, number, number]): Color;
-        static hwb(hwb: HwbColor): Color;
-        static cmyk(c: number, m: number, y: number, k: number): Color;
-        static cmyk(cmyk: [number, number, number, number]): Color;
-        static cmyk(cmyk: CmykColor): Color;
 
         rgb(): RbgColor;
         hsl(): HslColor;

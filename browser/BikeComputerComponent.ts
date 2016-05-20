@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import _ from "lodash";
+import _ from 'lodash';
 import {DisposableComponent} from '../helpers/disposables';
 import {loadComponents, loadInjectables} from '../helpers/serviceLoading';
-import {PhotodetectorService, TimeOfDay} from '../services/PhotodetectorService';
+import {LightsensorService, TimeOfDay} from '../services/LightsensorService';
 
 @Component({
     selector: 'bike-computer',
@@ -14,11 +14,14 @@ import {PhotodetectorService, TimeOfDay} from '../services/PhotodetectorService'
 `
 })
 export class BikeComputerComponent extends DisposableComponent {
-    constructor(photodetector: PhotodetectorService) {
+    constructor(lightsensor: LightsensorService) {
         super();
-        this._disposable.add(photodetector.timeOfDay
+        this._disposable.add(lightsensor.timeOfDay
             .subscribe(timeOfDay => {
-                _.each(TimeOfDay, (x: number) => _.isNumber(x) && document.body.classList.remove(TimeOfDay[x].toLowerCase()));
+                _(_.keys(TimeOfDay))
+                    .filter(_.isString)
+                    .map(_.toLower)
+                    .each(x => document.body.classList.remove(x));
                 document.body.classList.add(TimeOfDay[timeOfDay].toLowerCase());
 
                 if (timeOfDay === TimeOfDay.Day) {

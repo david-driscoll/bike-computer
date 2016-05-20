@@ -1,8 +1,9 @@
 import {Component, ElementRef} from '@angular/core';
 import _ from 'lodash';
 import {DisposableComponent} from '../../helpers/disposables';
-import {PhotodetectorService, TimeOfDay} from '../../services/PhotodetectorService';
-import {AccelerationService} from '../../services/AccelerationService';
+import {LightsensorService, TimeOfDay} from '../../services/LightsensorService';
+import {LocationService} from '../../services/LocationService';
+import {ColorService} from '../../services/ColorService';
 
 @Component({
     selector: 'speedo',
@@ -18,6 +19,7 @@ import {AccelerationService} from '../../services/AccelerationService';
             position: fixed !important;
             right: 680px;
             bottom: 10px;
+            transition: all 0.5s ease;
         }
         .day :host .speed {
             color: black;
@@ -37,8 +39,9 @@ export class SpeedoControl extends DisposableComponent {
     private _gauge: kendo.dataviz.ui.RadialGauge;
 
     constructor(
-        private photodetector: PhotodetectorService,
-        private acceleration: AccelerationService,
+        private lightsensor: LightsensorService,
+        private location: LocationService,
+        private color: ColorService,
         ref: ElementRef) {
         super();
         this._element = ref.nativeElement;
@@ -75,7 +78,7 @@ export class SpeedoControl extends DisposableComponent {
                     color: 'white'
                 },
                 min: 0,
-                max: this.acceleration.maxSpeed,
+                max: this.location.maxSpeed,
                 reverse: true,
                 labels: {
                     position: 'inside',
@@ -84,15 +87,7 @@ export class SpeedoControl extends DisposableComponent {
                 },
                 rangePlaceholderColor: 'white',
                 rangeSize: 12,
-                ranges: this.acceleration.getColors()
-                    .map((color, index) => {
-                        return {
-                            color,
-                            from: index,
-                            to: index + 1,
-                            opacity: 0.8
-                        };
-                    })
+                ranges: []
             }
         });
 
@@ -100,14 +95,14 @@ export class SpeedoControl extends DisposableComponent {
         this._updateSpeed(0);
         this._disposable.add(
             () => this._gauge.destroy(),
-            this.acceleration.speed.subscribe(speed => this._updateSpeed(speed)),
-            this.acceleration.speed
+            this.location.speed.subscribe(speed => this._updateSpeed(speed)),
+            this.location.speed
                 .map(speed => _.floor(speed / SpeedoControl.majorUnit))
                 .distinctUntilChanged()
                 .auditTime(2000)
                 .startWith(0)
                 .subscribe(speed => this._updateScale(speed)),
-            this.photodetector.timeOfDay.subscribe(timeOfDay => this._updateSkin(timeOfDay))
+            this.lightsensor.timeOfDay.subscribe(timeOfDay => this._updateSkin(timeOfDay))
         );
 
     }
@@ -122,19 +117,19 @@ export class SpeedoControl extends DisposableComponent {
     }
 
     private _updateRanges() {
-        this._gauge.options.scale.ranges = this.acceleration.getColors()
-            .map((color, index) => {
+        this._gauge.options.scale.ranges = _.range(0, 31, 1)
+            .map(speed => {
                 return {
-                    color,
-                    from: index,
-                    to: index + 1,
+                    color: this.color.getColorForSpeed(speed),
+                    from: speed,
+                    to: speed + 1,
                     opacity: 0.8
                 };
             });
     }
 
     private _updateScale(scale: number) {
-        this._gauge.options.scale.max = _.clamp((scale + 2) * SpeedoControl.majorUnit, SpeedoControl.maxScale);
+        this._gauge.options.scale.max = _.clamp((scale + 2) * SpeedoControl.majorUnit, this.location.maxSpeed);
         this._updateRanges();
         this._redraw();
     }
@@ -161,6 +156,7 @@ export class SpeedoControl extends DisposableComponent {
             gauge.scale.rangePlaceholderColor = 'white';
         }
         this._gauge.setOptions(gauge);
+        this._updateRanges();
         this._redraw();
     }
 }

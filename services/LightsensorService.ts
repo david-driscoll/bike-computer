@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import _ from "lodash";
+import _ from 'lodash';
 import {Injectable} from '@angular/core';
 
 export enum TimeOfDay {
@@ -9,7 +9,7 @@ export enum TimeOfDay {
 }
 
 @Injectable()
-export class PhotodetectorService {
+export class LightsensorService {
     private _nightTime: Observable<TimeOfDay>;
 
     constructor() {

@@ -11,6 +11,10 @@ lodash.default = lodash;
 // fixup color
 const color = require('color');
 color.Color = color;
+// fixup color
+const angles = require('angles');
+angles.default = angles;
+
 import {bootstrap}    from '@angular/platform-browser-dynamic';
 import {BikeComputerComponent} from './BikeComputerComponent';
 
