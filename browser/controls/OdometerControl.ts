@@ -5,6 +5,12 @@ import {LightsensorService} from '../../services/LightsensorService';
 import {DistanceService} from '../../services/DistanceService';
 import {ColorService} from '../../services/ColorService';
 import {LocationService} from '../../services/LocationService';
+import {UIStateService, UIState} from '../services/UIStateService';
+
+const controlSize = 156;
+const odometerFont = 20;
+const tripFont = 36;
+const compassFont = 40;
 
 @Component({
     selector: 'odometer',
@@ -19,10 +25,10 @@ import {LocationService} from '../../services/LocationService';
 
         .compass {
             transition: all 0.5s ease;
-            font-size: 40px;
+            font-size: ${tripFont}px;
             font-weight: bold;
             position: absolute;
-            bottom: 75%;
+            bottom: 80%;
             margin-right: -30%;
             margin-bottom: -22px;
             width: 100%;
@@ -31,7 +37,7 @@ import {LocationService} from '../../services/LocationService';
 
         .trip {
             transition: all 0.5s ease;
-            font-size: 36px;
+            font-size: ${odometerFont}px;
             border-top: 2px solid white;
             position: absolute;
             bottom: 50%;
@@ -44,7 +50,7 @@ import {LocationService} from '../../services/LocationService';
         .odometer {
             transition: all 0.5s ease;
             border-top: 2px solid white;
-            font-size: 20px;
+            font-size: ${odometerFont}px;
             position: absolute;
             bottom: 30px;
             width: 100%;
@@ -64,8 +70,8 @@ import {LocationService} from '../../services/LocationService';
             position: fixed;
             bottom: -38px;
             right: -17px;
-            width: 156px;
-            height: 156px;
+            width: ${controlSize}px;
+            height: ${controlSize}px;
         }
 
         .day :host {
@@ -89,6 +95,7 @@ export class OdometerControl extends DisposableComponent {
         private distance: DistanceService,
         private location: LocationService,
         private color: ColorService,
+        private ui: UIStateService,
         ref: ElementRef) {
         super();
         this._element = ref.nativeElement;
@@ -101,17 +108,25 @@ export class OdometerControl extends DisposableComponent {
         const trip = this._trip = <HTMLElement>this._element.querySelector('.trip');
         const odometer = this._odometer = <HTMLElement>this._element.querySelector('.odometer');
 
+        this._element.style.width = `${controlSize}px`;
+        this._element.style.height = `${controlSize}px`;
+
         this._disposable.add(
             this.distance.trip
-                .subscribe(distance => trip.innerText = _.padStart(distance.toFixed(1), 5, '0')),
+                .map(distance => _.padStart(distance.toFixed(1), 5, '0'))
+                .distinctUntilChanged()
+                .subscribe(distance => trip.innerText = distance),
             this.distance.odometer
-                .subscribe(distance => odometer.innerText = _.padStart(distance.toFixed(1), 8, '0')),
+                .map(distance => _.padStart(distance.toFixed(1), 8, '0'))
+                .distinctUntilChanged()
+                .subscribe(distance => odometer.innerText = distance),
             this.location.speed
                 .subscribe(speed => this._updateSpeed(speed)),
             this.location.heading
                 .map(degree => this.location.compass(degree))
                 .distinctUntilChanged()
-                .subscribe(heading => compass.innerText = heading)
+                .subscribe(heading => compass.innerText = heading),
+            this.ui.state.subscribe(state => this._updateState(state))
         );
 
     }
@@ -123,5 +138,27 @@ export class OdometerControl extends DisposableComponent {
         this._element.style.borderColor = speedLessOne;
         this._odometer.style.borderTopColor = speedLessOne;
         this._trip.style.borderTopColor = speedLessOne;
+    }
+
+    public _updateState(state: UIState) {
+        if (state === UIState.Zoom) {
+            this._element.style.width = `${controlSize * 2}px`;
+            this._element.style.height = `${controlSize * 2}px`;
+            this._compass.style.fontSize = `${compassFont * 2}px`;
+            this._compass.style.bottom = '70%';
+            this._odometer.style.fontSize = `${odometerFont * 2}px`;
+            this._odometer.style.bottom = '50px';
+            this._trip.style.fontSize = `${tripFont * 2}px`;
+            this._trip.style.bottom = '40%';
+        } else {
+            this._element.style.width = `${controlSize}px`;
+            this._element.style.height = `${controlSize}px`;
+            this._compass.style.fontSize = `${compassFont}px`;
+            this._compass.style.bottom = '80%';
+            this._odometer.style.fontSize = `${odometerFont}px`;
+            this._odometer.style.bottom = '30px';
+            this._trip.style.fontSize = `${tripFont}px`;
+            this._trip.style.bottom = '50%';
+        }
     }
 }

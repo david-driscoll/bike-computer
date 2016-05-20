@@ -6,11 +6,12 @@ import {LightsensorService, TimeOfDay} from '../services/LightsensorService';
 
 @Component({
     selector: 'bike-computer',
-    providers: loadInjectables(require, __dirname, '../services'),
+    providers: loadInjectables(require, __dirname, '../services').concat(loadInjectables(require, __dirname, 'services')),
     directives: loadComponents(require, __dirname, 'controls'),
     template: `
         <speedo></speedo>
         <odometer></odometer>
+        <taillights></taillights>
 `
 })
 export class BikeComputerComponent extends DisposableComponent {

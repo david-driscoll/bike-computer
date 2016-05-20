@@ -4,16 +4,19 @@ import {DisposableComponent} from '../../helpers/disposables';
 import {LightsensorService, TimeOfDay} from '../../services/LightsensorService';
 import {LocationService} from '../../services/LocationService';
 import {ColorService} from '../../services/ColorService';
+import {UIStateService, UIState} from '../services/UIStateService';
 
 @Component({
     selector: 'speedo',
     styles: [`
         .gauge {
+            transition: all 0.5s ease;
             position: fixed !important;
             left: -17px;
             bottom: -27px;
         }
         .speed {
+            transition: all 0.5s ease;
             font: bold 24px "Roboto";
             color: white;
             position: fixed !important;
@@ -35,13 +38,14 @@ import {ColorService} from '../../services/ColorService';
 export class SpeedoControl extends DisposableComponent {
     private static majorUnit = 5;
     private _element: HTMLElement;
-    private _speedElement: HTMLElement;
+    private _speed: HTMLElement;
     private _gauge: kendo.dataviz.ui.RadialGauge;
 
     constructor(
         private lightsensor: LightsensorService,
         private location: LocationService,
         private color: ColorService,
+        private ui: UIStateService,
         ref: ElementRef) {
         super();
         this._element = ref.nativeElement;
@@ -50,10 +54,14 @@ export class SpeedoControl extends DisposableComponent {
     public ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this._speedElement = <any>this._element.querySelector('.speed-value');
+        this._speed = <any>this._element.querySelector('.speed-value');
 
         const element = $(this._element.querySelector('.gauge')).kendoRadialGauge({
             name: 'speedo',
+            gaugeArea: {
+                height: 200,
+                width: 200
+            },
             pointer: [
                 {
                     color: 'white',
@@ -102,7 +110,8 @@ export class SpeedoControl extends DisposableComponent {
                 .auditTime(2000)
                 .startWith(0)
                 .subscribe(speed => this._updateScale(speed)),
-            this.lightsensor.timeOfDay.subscribe(timeOfDay => this._updateSkin(timeOfDay))
+            this.lightsensor.timeOfDay.subscribe(timeOfDay => this._updateSkin(timeOfDay)),
+            this.ui.state.subscribe(state => this._updateState(state))
         );
 
     }
@@ -113,7 +122,7 @@ export class SpeedoControl extends DisposableComponent {
 
     public _updateSpeed(speed: number) {
         this._gauge.allValues([speed]);
-        this._speedElement.innerText = <any>speed.toFixed(1);
+        this._speed.innerText = <any>speed.toFixed(1);
     }
 
     private _updateRanges() {
@@ -156,6 +165,33 @@ export class SpeedoControl extends DisposableComponent {
             gauge.scale.rangePlaceholderColor = 'white';
         }
         this._gauge.setOptions(gauge);
+        this._updateRanges();
+        this._redraw();
+    }
+
+    public _updateState(state: UIState) {
+        if (state === UIState.Zoom) {
+            this._gauge.options.gaugeArea.height = 388;
+            this._gauge.options.gaugeArea.width = 388;
+            this._gauge.element[0].style.bottom = '-47px';
+            this._gauge.element[0].style.left = '-29px';
+            this._gauge.options.scale.minorTicks.width = 2;
+            this._gauge.options.scale.rangeSize = 24;
+            this._gauge.options.scale.labels.font = 'bold 32px "Roboto"';
+            this._speed.parentElement.style.fontSize = '48px';
+            this._speed.parentElement.style.right = '580px';
+        } else {
+            this._gauge.options.gaugeArea.height = 200;
+            this._gauge.options.gaugeArea.width = 200;
+            this._gauge.element[0].style.bottom = '-27px';
+            this._gauge.element[0].style.left = '-17px';
+            this._gauge.options.scale.minorTicks.width = 1;
+            this._gauge.options.scale.rangeSize = 12;
+            this._gauge.options.scale.labels.font = 'bold 18px "Roboto"';
+            this._speed.parentElement.style.fontSize = '24px';
+            this._speed.parentElement.style.right = '680px';
+        }
+        this._gauge.setOptions(this._gauge.options);
         this._updateRanges();
         this._redraw();
     }
