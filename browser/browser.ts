@@ -5,8 +5,12 @@
 
 import 'reflect-metadata';
 require('zone.js');
+//fixup lodash
 const lodash = require('lodash');
 lodash.default = lodash;
+// fixup color
+const color = require('color');
+color.Color = color;
 import {bootstrap}    from '@angular/platform-browser-dynamic';
 import {BikeComputerComponent} from './BikeComputerComponent';
 

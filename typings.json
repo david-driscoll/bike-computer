@@ -1,6 +1,8 @@
 {
   "name": "bike-computer",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "github:david-driscoll/lodash-ts"
+  },
   "globalDependencies": {
     "electron": "registry:env/electron#0.37.6+20160416165306",
     "jquery": "registry:dt/jquery#1.10.0+20160417213236",
