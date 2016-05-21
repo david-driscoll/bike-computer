@@ -9,18 +9,14 @@ export class ConnectionService {
     private _currentlyOnline: boolean;
 
     constructor() {
-        // this._online = isOnline()
-        //     .expand(online => {
-        //         if (online) return Observable.timer(1000 * 60 * 5).mergeMap(isOnline);
-        //         return Observable.timer(1000 * 60 * 1).mergeMap(isOnline);
-        //     })
-        //     .do(online => this._currentlyOnline = online)
-        //     .share()
-        //     .startWith(this._currentlyOnline);
-
-        this._online = Observable.interval(1000)
-            .map(() => false)
-            .share();
+        this._online = isOnline()
+            .expand(online => {
+                if (online) return Observable.timer(1000 * 60 * 5).mergeMap(isOnline);
+                return Observable.timer(1000 * 60 * 1).mergeMap(isOnline);
+            })
+            .do(online => this._currentlyOnline = online)
+            .share()
+            .startWith(this._currentlyOnline);
     }
 
     public get online() { return this._online; }
