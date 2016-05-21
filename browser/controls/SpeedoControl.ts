@@ -14,6 +14,7 @@ import {UIStateService, UIState} from '../services/UIStateService';
             position: fixed !important;
             left: -17px;
             bottom: -27px;
+            z-index: 1001;
         }
         .speed {
             transition: all 0.5s ease;
@@ -23,13 +24,29 @@ import {UIStateService, UIState} from '../services/UIStateService';
             right: 680px;
             bottom: 10px;
             transition: all 0.5s ease;
+            z-index: 1001;
         }
         .day :host .speed {
             color: black;
         }
+        .gauge-back {
+            position: fixed;
+            border-radius: 400px;
+            border-bottom-left-radius: 0;
+            left: -13px;
+            bottom: -33px;
+            width: 178px;
+            height: 178px;
+            background-color: black;
+            z-index: 1000;
+        }
+        .day :host .gauge-back {
+            background-color: white;
+        }
     `],
     template: `
     <div class="gauge"></div>
+    <div class="gauge-back"></div>
     <div class="speed">
         <span class="speed-value">0.0</span>mph
     </div>

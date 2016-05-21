@@ -47,6 +47,10 @@ const compassFont = 40;
             text-align: center;
         }
 
+        .day :host .trip {
+            border-top-color: black;
+        }
+
         .odometer {
             transition: all 0.5s ease;
             border-top: 2px solid white;
@@ -72,10 +76,13 @@ const compassFont = 40;
             right: -17px;
             width: ${controlSize}px;
             height: ${controlSize}px;
+            z-index: 1000;
+            background-color: black;
         }
 
         .day :host {
             border-color: black;
+            background-color: white;
         }
     `],
     template: `

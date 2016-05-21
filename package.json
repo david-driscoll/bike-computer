@@ -41,6 +41,7 @@
     "color": "^0.11.1",
     "fastdom": "^1.0.1",
     "font-awesome": "^4.6.1",
+    "google-maps": "^3.2.1",
     "is-online": "^5.1.1",
     "jquery": "^2.2.3",
     "lodash": "^4.12.0",

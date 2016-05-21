@@ -5,6 +5,7 @@
 
 import 'reflect-metadata';
 require('zone.js');
+
 //fixup lodash
 const lodash = require('lodash');
 lodash.default = lodash;
@@ -14,6 +15,10 @@ color.Color = color;
 // fixup color
 const angles = require('angles');
 angles.default = angles;
+// fixup color
+const loader = require('google-maps');
+loader.default = loader;
+// /fixup
 
 import {bootstrap}    from '@angular/platform-browser-dynamic';
 import {BikeComputerComponent} from './BikeComputerComponent';

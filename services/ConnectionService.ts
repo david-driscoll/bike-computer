@@ -1,22 +1,22 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import _ from 'lodash';
-const isOnline = Observable.bindNodeCallback(<(cb: (err: any, online: boolean) => void) => void>require('is-online'));
 
 @Injectable()
 export class ConnectionService {
     private _online: Observable<boolean>;
-    private _currentlyOnline: boolean;
+    private _currentlyOnline = window.navigator.onLine;
 
     constructor() {
-        this._online = isOnline()
-            .expand(online => {
-                if (online) return Observable.timer(1000 * 60 * 5).mergeMap(isOnline);
-                return Observable.timer(1000 * 60 * 1).mergeMap(isOnline);
+        this._online = Observable.fromEvent<boolean>(document, 'online')
+            .map(x => window.navigator.onLine)
+            .do(online => {
+                this._currentlyOnline = online;
+                console.log('online', online);
             })
-            .do(online => this._currentlyOnline = online)
+            .distinctUntilChanged()
             .share()
-            .startWith(this._currentlyOnline);
+            .startWith(true);
     }
 
     public get online() { return this._online; }

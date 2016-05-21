@@ -13,7 +13,12 @@ export class UIStateService {
     private _state: Observable<UIState>;
     constructor(connection: ConnectionService) {
         this._state = connection.online
-            .map(x => x ? UIState.Maps : UIState.Zoom)
+            .map(x => {
+                if (x) {
+                    return UIState.Maps;
+                }
+                return UIState.Zoom;
+            })
             .distinctUntilChanged()
             .cache(1);
     }

@@ -12,6 +12,7 @@ import {LightsensorService, TimeOfDay} from '../services/LightsensorService';
         <speedo></speedo>
         <odometer></odometer>
         <taillights></taillights>
+        <google-map></google-map>
 `
 })
 export class BikeComputerComponent extends DisposableComponent {

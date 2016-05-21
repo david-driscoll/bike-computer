@@ -12,7 +12,7 @@ import {Led} from './Led';
     template: `
     `
 })
-export class StopLightComponent extends DisposableComponent {
+export class StopLightControl extends DisposableComponent {
     private _timer: IDisposable;
     private _element: HTMLElement;
     private _state: boolean[] = _.range(0, 12).map(x => false);

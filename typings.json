@@ -5,6 +5,8 @@
   },
   "globalDependencies": {
     "electron": "registry:env/electron#0.37.6+20160416165306",
+    "google-maps": "registry:dt/google-maps#3.1.0+20151203174025",
+    "google.maps": "registry:dt/google.maps#3.20.0+20160414124451",
     "jquery": "registry:dt/jquery#1.10.0+20160417213236",
     "node": "registry:env/node#4.0.0+20160507210304"
   }
