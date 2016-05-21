@@ -129,7 +129,7 @@ export class OdometerControl extends DisposableComponent {
                 .subscribe(distance => odometer.innerText = distance),
             this.location.speed
                 .subscribe(speed => this._updateSpeed(speed)),
-            this.location.heading
+            this.location.facing
                 .map(degree => this.location.compass(degree))
                 .distinctUntilChanged()
                 .subscribe(heading => compass.innerText = heading),

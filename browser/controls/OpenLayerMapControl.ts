@@ -33,7 +33,7 @@ function mapLoader() {
 }
 
 @Component({
-    selector: 'google-map',
+    selector: 'olm',
     styles: [`
     :host {
         position: fixed !important;
@@ -45,9 +45,9 @@ function mapLoader() {
     `],
     template: `<div></div>`
 })
-export class GoogleMapControl extends DisposableComponent {
+export class OpenLayerMapControl extends DisposableComponent {
     private _element: HTMLElement;
-    private _map: GoogleMap;
+    private _map: Map;
     constructor(
         private ui: UIStateService,
         private lightsensor: LightsensorService,
@@ -79,7 +79,7 @@ export class GoogleMapControl extends DisposableComponent {
                         if (this._map) {
                             this._map.dispose();
                         }
-                        this._map = new GoogleMap(this._element, this.path, this.location, this.lightsensor);
+                        this._map = new Map(this._element, this.path, this.location, this.lightsensor);
                     } else {
                         if (this._map) {
                             this._map.dispose();
@@ -93,7 +93,7 @@ export class GoogleMapControl extends DisposableComponent {
     }
 }
 
-export class GoogleMap implements IDisposable {
+export class Map implements IDisposable {
     private _disposable = new CompositeDisposable();
     private _map: google.maps.Map;
     private _me: google.maps.Marker;
