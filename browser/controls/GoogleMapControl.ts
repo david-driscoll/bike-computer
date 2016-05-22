@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {DisposableComponent, CompositeDisposable, IDisposable} from '../../helpers/disposables';
 import {UIStateService, UIState} from '../services/UIStateService';
 import {LightsensorService, TimeOfDay} from '../../services/LightsensorService';
-import {LocationService, LatLong} from '../../services/LocationService';
+import {LocationService, LngLatArray} from '../../services/LocationService';
 import {PathService} from '../../services/PathService';
 import googleMaps from 'google-maps';
 import {createObservable} from '../../helpers/observableCreate';
@@ -140,8 +140,8 @@ export class GoogleMap implements IDisposable {
                     }
                 }),
             this.location.current
-                .subscribe(current => {
-                    this._map.setCenter(current);
+                .subscribe(([lng, lat]) => {
+                    this._map.setCenter({ lng, lat });
                 }),
             this.location.facing
                 .subscribe(degree => {
@@ -149,7 +149,7 @@ export class GoogleMap implements IDisposable {
                 }),
             this.path.trip
                 .subscribe(path => {
-                    this._trip.setPath(path);
+                    this._trip.setPath(path.map(([lng, lat]) => ({ lng, lat })));
                 })
         );
     }

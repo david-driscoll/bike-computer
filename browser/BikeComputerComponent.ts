@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {DisposableComponent} from '../helpers/disposables';
 import {loadComponents, loadInjectables} from '../helpers/serviceLoading';
 import {LightsensorService, TimeOfDay} from '../services/LightsensorService';
+import {UIStateService, UIState} from './services/UIStateService';
 
 @Component({
     selector: 'bike-computer',
@@ -12,11 +13,11 @@ import {LightsensorService, TimeOfDay} from '../services/LightsensorService';
         <speedo></speedo>
         <odometer></odometer>
         <taillights></taillights>
-        <google-map></google-map>
+        <mapbox *ngIf="(ui.state | async) === ${UIState.Maps}"></mapbox>
 `
 })
 export class BikeComputerComponent extends DisposableComponent {
-    constructor(lightsensor: LightsensorService) {
+    constructor(lightsensor: LightsensorService, private ui: UIStateService) {
         super();
         this._disposable.add(lightsensor.timeOfDay
             .subscribe(timeOfDay => {

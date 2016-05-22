@@ -4,16 +4,13 @@ import _ from 'lodash';
 import angles from 'angles';
 import {DistanceService} from './DistanceService';
 
-export interface LatLong {
-    lat: number;
-    lng: number;
-}
+export type LngLatArray = [number, number];
 
 @Injectable()
 export class LocationService {
     private _speed: Observable<number>;
     private _facing: Observable<number>;
-    private _current: Observable<LatLong>;
+    private _current: Observable<LngLatArray>;
     private _maxSpeed = 30;
 
     constructor(distanceService: DistanceService) {
@@ -38,12 +35,12 @@ export class LocationService {
             .share();
 
         this._current = Observable.interval(100)
-            .scan((acc) => {
-                const c = _.clone(acc);
-                c.lat += _.random(-0.00000000000001, 0.00000000000001, true);
-                c.lng += _.random(-0.00000000000001, 0.00000000000001, true);
-                return acc;
-            }, { lat: 35.78352363498731, lng: -78.86666017150878 })
+            .scan<LngLatArray>((acc) => {
+                const c: LngLatArray = [acc[0], acc[1]];
+                c[0] += _.random(0, 1) ? -0.00007 : 0.00007;
+                c[1] += _.random(0, 1) ? -0.00007 : 0.00007;
+                return c;
+            }, [-78.86666017150878, 35.78352363498731])
             .share();
     }
 
