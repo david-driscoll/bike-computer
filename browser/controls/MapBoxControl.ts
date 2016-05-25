@@ -5,6 +5,7 @@ import {DisposableComponent, CompositeDisposable} from '../../helpers/disposable
 import {LightsensorService, TimeOfDay} from '../../services/LightsensorService';
 import {LocationService} from '../../services/LocationService';
 import {PathService} from '../../services/PathService';
+import angles from 'angles';
 //const mapbox = require('../../node_modules/mapbox-gl/dist/mapbox-gl.js');
 //const {Map: MapBoxGl.Map, GeoJSONSource, LngLat} = <MapBoxGl>mapbox;
 const mapbox: typeof MapBox = require('../../node_modules/mapbox-gl/dist/mapbox-gl.js');
@@ -180,7 +181,8 @@ export class MapBoxControl extends DisposableComponent {
                             this._map.rotateTo(degree);
                             map.setLayoutProperty('me', 'icon-rotate', 0);
                         } else {
-                            map.setLayoutProperty('me', 'icon-rotate', degree - map.getBearing());
+                            // TODO: Calculate the proper angle relative to current bearing
+                            map.setLayoutProperty('me', 'icon-rotate', 0);
                         }
                     }),
                 this.path.trip
