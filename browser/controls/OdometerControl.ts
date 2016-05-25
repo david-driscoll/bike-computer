@@ -16,7 +16,7 @@ const compassFont = 40;
     selector: 'odometer',
     styles: [`
         .text {
-            color: white;
+            color: gold;
         }
 
         .day :host .text {
@@ -128,6 +128,7 @@ export class OdometerControl extends DisposableComponent {
                 .distinctUntilChanged()
                 .subscribe(distance => odometer.innerText = distance),
             this.location.speed
+                .auditTime(1000/3)
                 .subscribe(speed => this._updateSpeed(speed)),
             this.location.facing
                 .map(degree => this.location.compass(degree))

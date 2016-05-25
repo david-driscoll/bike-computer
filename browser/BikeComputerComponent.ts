@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {HTTP_PROVIDERS} from '@angular/http';
 import _ from 'lodash';
 import {DisposableComponent} from '../helpers/disposables';
 import {loadComponents, loadInjectables} from '../helpers/serviceLoading';
@@ -7,13 +8,14 @@ import {UIStateService, UIState} from './services/UIStateService';
 
 @Component({
     selector: 'bike-computer',
-    providers: loadInjectables(require, __dirname, '../services').concat(loadInjectables(require, __dirname, 'services')),
+    providers: loadInjectables(require, __dirname, '../services').concat(loadInjectables(require, __dirname, 'services')).concat(HTTP_PROVIDERS),
     directives: loadComponents(require, __dirname, 'controls'),
     template: `
         <speedo></speedo>
         <odometer></odometer>
         <taillights></taillights>
-        <mapbox *ngIf="(ui.state | async) === ${UIState.Maps}"></mapbox>
+        <!--<mapbox *ngIf="(ui.state | async) === ${UIState.Maps}"></mapbox>-->
+        <open-weather></open-weather>
 `
 })
 export class BikeComputerComponent extends DisposableComponent {

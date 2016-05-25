@@ -19,7 +19,7 @@ import {UIStateService, UIState} from '../services/UIStateService';
         .speed {
             transition: all 0.5s ease;
             font: bold 24px "Roboto";
-            color: white;
+            color: gold;
             position: fixed !important;
             right: 680px;
             bottom: 10px;
