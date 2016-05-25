@@ -25,8 +25,41 @@ mapbox.accessToken = apiKey;
         width: 100%;
         height: 100%;
     }
+
+    .center {
+        position: absolute !important;
+        bottom: 20px;
+        width: 100px;
+        text-align: center;
+        left: 50%;
+        margin-left: -50px;
+        display: none;
+        cursor: pointer;
+        border-radius: 10px;
+        color: gold;
+        background-color: black;
+        border: 2px solid gold;
+    }
+
+    .day :host .center {
+        color: black;
+        background-color: white;
+        border: 2px solid black;
+    }
+
+    .center.show {
+        display: block;
+    }
+
+    .mapboxgl-map {
+        width: 100%;
+        height: 100%;
+    }
     `],
-    template: `<div></div>`
+    template: `
+    <div class></div>
+    <div class="center" [class.show]="_panning" (click)="_panning = false"><i class="fa fa-location-arrow"></i> Center</div>
+    `
 })
 export class MapBoxControl extends DisposableComponent {
     private _element: HTMLElement;
@@ -38,6 +71,7 @@ export class MapBoxControl extends DisposableComponent {
         type: 'LineString',
         coordinates: []
     };
+    private _panning = false;
     constructor(
         private lightsensor: LightsensorService,
         private path: PathService,
@@ -50,21 +84,24 @@ export class MapBoxControl extends DisposableComponent {
     public ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this._disposable.add(Observable.merge(
-            Observable.zip(this.lightsensor.timeOfDay.take(1), this.location.current.take(1), (timeOfDay, location) => ({ timeOfDay, location })),
-            this.lightsensor.timeOfDay
-                .mergeMap(timeOfDay => this.location.current.take(1), (timeOfDay, location) => ({ timeOfDay, location })))
-            .do(() => {
-                if (this._mapDisposable) this._mapDisposable.dispose();
-            })
-            .subscribe(({ timeOfDay, location }) => this._mapDisposable = this.buildMap(timeOfDay, location)));
+        this._disposable.add(
+            Observable.merge(
+                Observable.zip(this.lightsensor.timeOfDay.take(1), this.location.current.take(1), (timeOfDay, location) => ({ timeOfDay, location })),
+                this.lightsensor.timeOfDay
+                    .switchMap(timeOfDay => this.location.current.take(1), (timeOfDay, location) => ({ timeOfDay, location }))
+            )
+                .do(() => {
+                    if (this._mapDisposable) this._mapDisposable.dispose();
+                })
+                .subscribe(({ timeOfDay, location }) => this._mapDisposable = this.buildMap(timeOfDay, location))
+        );
     }
 
     public buildMap(timeOfDay: TimeOfDay, location: [number, number]) {
         var disposable = new CompositeDisposable;
 
         const map = this._map = new Map({
-            container: this._element,
+            container: this._element.firstElementChild,
             minZoom: 14,
             maxZoom: 17,
             zoom: 17,
@@ -124,9 +161,13 @@ export class MapBoxControl extends DisposableComponent {
             window['_map'] = this._map;
 
             disposable.add(
+                Observable.fromEvent(this._map, "dragstart")
+                    .subscribe(x => this._panning = true),
                 this.location.current
                     .subscribe(([lng, lat]) => {
-                        this._map.setCenter(new LngLat(lng, lat));
+                        if (!this._panning) {
+                            this._map.setCenter(new LngLat(lng, lat));
+                        }
                         this._me.setData({
                             type: 'Point',
                             coordinates: [lng, lat]
@@ -135,8 +176,12 @@ export class MapBoxControl extends DisposableComponent {
                 this.location.facing
                     .auditTime(100)
                     .subscribe(degree => {
-                        this._map.rotateTo(degree);
-                        //map.setLayoutProperty('me', 'icon-rotate', degree);
+                        if (!this._panning) {
+                            this._map.rotateTo(degree);
+                            map.setLayoutProperty('me', 'icon-rotate', 0);
+                        } else {
+                            map.setLayoutProperty('me', 'icon-rotate', degree - map.getBearing());
+                        }
                     }),
                 this.path.trip
                     .auditTime(1000)

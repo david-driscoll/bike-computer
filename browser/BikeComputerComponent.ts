@@ -14,7 +14,7 @@ import {UIStateService, UIState} from './services/UIStateService';
         <speedo></speedo>
         <odometer></odometer>
         <taillights></taillights>
-        <!--<mapbox *ngIf="(ui.state | async) === ${UIState.Maps}"></mapbox>-->
+        <mapbox *ngIf="(ui.state | async) === ${UIState.Maps}"></mapbox>
         <open-weather></open-weather>
 `
 })

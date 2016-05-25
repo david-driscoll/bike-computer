@@ -4,7 +4,6 @@ import {Injectable} from '@angular/core';
 
 export enum TimeOfDay {
     Day,
-    Twilight,
     Night
 }
 
@@ -13,8 +12,8 @@ export class LightsensorService {
     private _nightTime: Observable<TimeOfDay>;
 
     constructor() {
-        this._nightTime = Observable.interval(10000)
-            .map(() => <TimeOfDay>_.random(0, 2))
+        this._nightTime = Observable.interval(60000)
+            .map(() => <TimeOfDay>_.random(0, 1))
             .share()
             .startWith(TimeOfDay.Day);
     }
