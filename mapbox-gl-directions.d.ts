@@ -1,38 +1,34 @@
-declare module MapBoxDirections {
-    export let accessToken: string;
-    
-    export type WayPoint = [number, number];
+declare module MapBox {
     export type Destination = [number, number];
     export type Origin = [number, number];
-    export type Coordinates = [WayPoint];
     
     export interface Directions{
-        originPoint: MapBoxDirections.WayPoint;
+        originPoint: Point;
         originLabel: string;
-        destinationPoint: MapBoxDirections.WayPoint;
+        destinationPoint: Point;
         destinationLabel: string;
-        wayPoint: MapBoxDirections.WayPoint;        
+        wayPoint: [Point];        
     }
     
-    export interface MapDirections{
+    export interface Directions{
         /** HTML element to initialize the map */
         container?: string | Element;
         
         /** Adds a waypoint to the route.  Calling this method requires the map load event to have run. */
-        addWaypoint(index: number, waypoint: WayPoint): this;
+        addWaypoint(index: number, waypoint: Point): this;
         
-        getDestination(): Destination;
+        getDestination(): Point;
         
-        getOrigin(): Origin;
+        getOrigin(): Point;
         
-        getWaypoints(): WayPoint[];
+        getWaypoints(): Point[];
         
         removeWaypoint(index: number): this;
         
         revers(): this;
         
-        setDestination(query: WayPoint[]): this;
+        setDestination(query: Point[]): this;
         
-        setOrigin(query: WayPoint[]): this;
+        setOrigin(query: Point[]): this;
     }
 }

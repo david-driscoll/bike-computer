@@ -66,6 +66,7 @@ export class MapBoxControl extends DisposableComponent {
     private _element: HTMLElement;
     private _mapDisposable: CompositeDisposable;
     private _map: MapBox.Map;
+    private _directions: MapBox.Directions;
     private _me: MapBox.GeoJSONSource;
     private _trip: MapBox.GeoJSONSource;
     private _tripData: GeoJSON.LineString = {
@@ -195,5 +196,11 @@ export class MapBoxControl extends DisposableComponent {
 
         });
         return disposable;
+    }
+    
+    public getDirections(currentLocation:MapBox.Point, destination:MapBox.Point){
+        if(this._map == null){
+            
+        }
     }
 }
