@@ -1,18 +1,28 @@
 declare module MapBox {
-    export type Destination = [number, number];
-    export type Origin = [number, number];
-    
-    export interface Directions{
+
+    export type Directions={
         originPoint: Point;
+        originQuery: string;
         originLabel: string;
         destinationPoint: Point;
+        destinationQuery: string;
         destinationLabel: string;
-        wayPoint: [Point];        
+        wayPoint: Point[];        
+    }
+
+    export interface DirectionsOptions{
+        container?: string | Element;
+        unit: string | TextMetrics;
+        profile: "walking" | "driving" | "cycling"
     }
     
-    export interface Directions{
+    export interface DirectionsApi{
         /** HTML element to initialize the map */
         container?: string | Element;
+        
+        directions: Directions;
+
+        constructor(options: DirectionsOptions): Directions;
         
         /** Adds a waypoint to the route.  Calling this method requires the map load event to have run. */
         addWaypoint(index: number, waypoint: Point): this;
@@ -23,12 +33,14 @@ declare module MapBox {
         
         getWaypoints(): Point[];
         
-        removeWaypoint(index: number): this;
+        removeWaypoint(index: number): Directions;
         
-        revers(): this;
+        revers(): Directions;
         
-        setDestination(query: Point[]): this;
+        setDestination(query: Point[]): Directions;
         
-        setOrigin(query: Point[]): this;
+        setOrigin(query: Point[]): Directions;
+
+        setWaypoint(index: number, waypoint:Point): Directions;
     }
 }

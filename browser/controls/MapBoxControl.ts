@@ -199,8 +199,5 @@ export class MapBoxControl extends DisposableComponent {
     }
     
     public getDirections(currentLocation:MapBox.Point, destination:MapBox.Point){
-        if(this._map == null){
-            
-        }
     }
 }
