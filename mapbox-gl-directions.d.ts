@@ -1,28 +1,19 @@
-declare module MapBox {
+declare module MapBoxDirections {
 
-    export type Directions={
-        originPoint: Point;
-        originQuery: string;
-        originLabel: string;
-        destinationPoint: Point;
-        destinationQuery: string;
-        destinationLabel: string;
-        wayPoint: Point[];        
-    }
+    export let accessToken: string;
+
+    export type Point = [number, number];
 
     export interface DirectionsOptions{
         container?: string | Element;
         unit: string | TextMetrics;
-        profile: "walking" | "driving" | "cycling"
+        profile: "walking" | "driving" | "cycling",
+        proximity: Point
     }
     
-    export interface DirectionsApi{
-        /** HTML element to initialize the map */
-        container?: string | Element;
-        
-        directions: Directions;
+    export class Directions extends MapBox.Control{
 
-        constructor(options: DirectionsOptions): Directions;
+        constructor(options: DirectionsOptions);
         
         /** Adds a waypoint to the route.  Calling this method requires the map load event to have run. */
         addWaypoint(index: number, waypoint: Point): this;
