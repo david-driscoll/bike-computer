@@ -13,6 +13,11 @@ var {Map, GeoJSONSource, LngLat} = mapbox;
 const lightStyle = 'mapbox://styles/david-driscoll/cioi59qdt0010aunn2k23tg7a';
 const darkStyle = 'mapbox://styles/david-driscoll/cioheaaph000naokp758ijj37';
 
+// Directions
+const directions: typeof MapBoxDirections = require('../../node_modules/mapbox-gl-directions/index.js');
+var {Directions} = directions;
+
+
 const apiKey: string = require('../../vendor/maps-api-key.json').mapbox;
 mapbox.accessToken = apiKey;
 
@@ -66,6 +71,7 @@ export class MapBoxControl extends DisposableComponent {
     private _element: HTMLElement;
     private _mapDisposable: CompositeDisposable;
     private _map: MapBox.Map;
+    private _directions: MapBoxDirections.Directions;
     private _me: MapBox.GeoJSONSource;
     private _trip: MapBox.GeoJSONSource;
     private _tripData: GeoJSON.LineString = {
@@ -110,6 +116,15 @@ export class MapBoxControl extends DisposableComponent {
             hash: false,
             style: timeOfDay === TimeOfDay.Day ? lightStyle : darkStyle
         });
+
+        const directions = this._directions = new Directions({
+            unit: 'metric',
+            container: 'directions',
+            profile: 'walking',
+            proximity: [0,0]
+        });
+
+        map.addControl(directions);
 
         disposable.add(
             () => this._disposable.remove(disposable),
@@ -195,5 +210,8 @@ export class MapBoxControl extends DisposableComponent {
 
         });
         return disposable;
+    }
+    
+    public getDirections(currentLocation:MapBox.Point, destination:MapBox.Point){
     }
 }
